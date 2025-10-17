@@ -1,61 +1,211 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PC Shop - E-commerce Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+🖥️ **PC Shop** là một nền tảng thương mại điện tử hoàn chỉnh được xây dựng bằng Laravel, chuyên bán các sản phẩm máy tính và phụ kiện công nghệ.
 
-## About Laravel
+## ✨ Tính năng nổi bật
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 🛍️ **Cho khách hàng**
+- **Catalog sản phẩm**: Duyệt và tìm kiếm sản phẩm theo danh mục
+- **Giỏ hàng thông minh**: Quản lý sản phẩm với session support
+- **Thanh toán đa dạng**: VNPay, COD với xử lý bảo mật
+- **Theo dõi đơn hàng**: Real-time order tracking
+- **Responsive design**: Tối ưu cho mọi thiết bị
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### ⚡ **Real-time Features**
+- **Cập nhật tồn kho**: WebSocket với Pusher
+- **Thông báo instant**: Stock alerts và order updates
+- **Conflict prevention**: Tránh overselling
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🔧 **Cho admin**
+- **Dashboard analytics**: Thống kê doanh thu và đơn hàng
+- **Quản lý sản phẩm**: CRUD với upload hình ảnh
+- **Quản lý đơn hàng**: Theo dõi và cập nhật trạng thái
+- **Quản lý người dùng**: Role-based access control
 
-## Learning Laravel
+## 🚀 Tech Stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Backend**: Laravel 11, PHP 8.2+
+- **Frontend**: Tailwind CSS, Alpine.js
+- **Database**: MySQL với migrations
+- **Real-time**: Pusher WebSocket
+- **Payment**: VNPay Gateway
+- **Auth**: Laravel Breeze
+- **Email**: Laravel Mail
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 📦 Cài đặt
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Yêu cầu hệ thống
+- PHP 8.2+
+- Composer
+- Node.js & NPM
+- MySQL
+- Git
 
-## Laravel Sponsors
+### Bước 1: Clone repository
+```bash
+git clone https://github.com/jadeeeeeisgood/PCShop_Project.git
+cd PCShop_Project
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Bước 2: Cài đặt dependencies
+```bash
+# PHP dependencies
+composer install
 
-### Premium Partners
+# Node.js dependencies
+npm install
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Bước 3: Cấu hình môi trường
+```bash
+# Copy environment file
+cp .env.example .env
 
-## Contributing
+# Generate application key
+php artisan key:generate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Bước 4: Cấu hình database
+Cập nhật file `.env` với thông tin database:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=pcshop
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
 
-## Code of Conduct
+### Bước 5: Chạy migrations và seeders
+```bash
+# Create database tables
+php artisan migrate
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Seed sample data
+php artisan db:seed
+```
 
-## Security Vulnerabilities
+### Bước 6: Build assets
+```bash
+# Development
+npm run dev
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Production
+npm run build
+```
 
-## License
+### Bước 7: Cấu hình real-time features (optional)
+Cập nhật Pusher credentials trong `.env`:
+```env
+PUSHER_APP_ID=your_app_id
+PUSHER_APP_KEY=your_app_key
+PUSHER_APP_SECRET=your_app_secret
+PUSHER_APP_CLUSTER=ap1
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Bước 8: Cấu hình VNPay (optional)
+```env
+VNPAY_TMN_CODE=your_tmn_code
+VNPAY_HASH_SECRET=your_hash_secret
+```
+
+### Bước 9: Khởi chạy ứng dụng
+```bash
+php artisan serve
+```
+
+Truy cập: `http://localhost:8000`
+
+## 🎯 Demo
+
+- **Frontend**: Catalog sản phẩm và shopping cart
+- **Admin Panel**: `/admin` (admin@example.com / password)
+- **Real-time Demo**: `/demo/real-time-features`
+
+## 📂 Cấu trúc project
+
+```
+app/
+├── Events/              # Broadcasting events
+├── Http/Controllers/    # Controllers
+├── Models/             # Eloquent models
+├── Services/           # Business logic
+│   ├── StockService.php    # Real-time stock management
+│   ├── VNPayService.php    # Payment processing
+│   └── CartService.php     # Cart operations
+└── Mail/               # Email templates
+
+resources/views/
+├── admin/              # Admin interface
+├── auth/               # Authentication
+├── cart/               # Shopping cart
+├── checkout/           # Checkout process
+├── products/           # Product catalog
+└── demo/               # Feature demonstrations
+
+public/
+├── css/                # Stylesheets
+├── js/                 # JavaScript
+│   └── stock-updates.js    # Real-time features
+└── img/                # Images
+
+database/
+├── migrations/         # Database schema
+└── seeders/           # Sample data
+```
+
+## 🛡️ Bảo mật
+
+- **CSRF Protection**: Laravel's built-in CSRF
+- **SQL Injection**: Eloquent ORM protection
+- **XSS Prevention**: Blade template escaping
+- **Payment Security**: VNPay HMAC verification
+- **Input Validation**: Form request validation
+
+## 📈 Tính năng nâng cao
+
+### Real-time Stock Management
+- Tự động cập nhật tồn kho khi có thay đổi
+- Reservation system tránh overselling
+- Low stock notifications
+
+### VNPay Integration
+- Secure payment processing
+- Transaction tracking
+- Automatic order confirmation
+
+### Performance Optimization
+- Database query optimization
+- Image compression
+- Asset minification
+- Caching strategies
+
+## 🤝 Đóng góp
+
+1. Fork repository
+2. Tạo feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Tạo Pull Request
+
+## 📝 License
+
+Dự án này được phân phối dưới giấy phép [MIT License](LICENSE).
+
+## 📞 Liên hệ
+
+- **Developer**: PCShop Team
+- **Email**: support@pcshop.com
+- **GitHub**: [@jadeeeeeisgood](https://github.com/jadeeeeeisgood)
+
+## 🙏 Acknowledgments
+
+- Laravel Framework
+- Tailwind CSS
+- Pusher
+- VNPay
+- Tất cả contributors
+
+---
+
+**⭐ Nếu dự án này hữu ích, hãy cho chúng tôi một star!**
