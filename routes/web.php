@@ -100,7 +100,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout/success/{order?}', [CheckoutController::class, 'success'])->name('checkout.success');
 
     // VNPay payment routes
-    Route::post('/payment/vnpay/{order}', [\App\Http\Controllers\VNPayController::class, 'createPayment'])->name('payment.vnpay');
+    Route::get('/payment/vnpay/{order}', [\App\Http\Controllers\VNPayController::class, 'createPayment'])->name('payment.vnpay');
 });
 
 // VNPay callback (no auth required)

@@ -3,16 +3,17 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        // Set all existing products as active
-        DB::table('products')->update(['is_active' => true]);
+        Schema::table('products', function (Blueprint $table) {
+            $table->boolean('is_active')->default(true)->after('is_featured');
+        });
     }
 
     /**
@@ -20,6 +21,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        // No need to reverse this operation
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('is_active');
+        });
     }
 };

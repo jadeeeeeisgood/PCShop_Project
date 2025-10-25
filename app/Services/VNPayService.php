@@ -25,13 +25,36 @@ class VNPayService
      */
     public function createPaymentUrl(Order $order, string $ipAddress): string
     {
+        Log::info('VNPayService createPaymentUrl started', [
+            'order_id' => $order->id,
+            'order_total' => $order->total,
+            'ip_address' => $ipAddress,
+            'tmn_code' => $this->vnp_TmnCode,
+            'return_url' => $this->vnp_ReturnUrl
+        ]);
+
         $vnp_TxnRef = $order->id . '_' . time();
         $vnp_OrderInfo = 'Thanh toán đơn hàng #' . $order->id . ' - PC Shop';
         $vnp_OrderType = 'billpayment';
-        $vnp_Amount = $order->total_amount * 100; // VNPay requires amount in cents
+        $vnp_Amount = (int) $order->total; // VNPay yêu cầu integer
         $vnp_Locale = 'vn';
         $vnp_BankCode = '';
         $vnp_IpAddr = $ipAddress;
+
+        // Validate required parameters
+        if (empty($this->vnp_TmnCode) || empty($this->vnp_HashSecret) || empty($this->vnp_Url)) {
+            Log::error('VNPay configuration missing', [
+                'tmn_code' => $this->vnp_TmnCode,
+                'has_hash_secret' => !empty($this->vnp_HashSecret),
+                'vnp_url' => $this->vnp_Url
+            ]);
+            throw new \Exception('VNPay configuration is incomplete');
+        }
+
+        if ($vnp_Amount < 5000 || $vnp_Amount >= 1000000000) {
+            Log::error('VNPay amount out of range', ['amount' => $vnp_Amount]);
+            throw new \Exception('Payment amount must be between 5,000 and 999,999,999 VND');
+        }
 
         $inputData = array(
             "vnp_Version" => "2.1.0",
@@ -72,10 +95,19 @@ class VNPayService
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
 
+        Log::info('VNPay URL generated', [
+            'vnp_url' => $vnp_Url,
+            'url_length' => strlen($vnp_Url),
+            'amount' => $vnp_Amount,
+            'txn_ref' => $vnp_TxnRef,
+            'hashdata' => $hashdata,
+            'secure_hash' => substr($vnpSecureHash ?? '', 0, 10) . '...'
+        ]);
+
         // Store transaction reference for verification
         $order->update([
             'vnpay_txn_ref' => $vnp_TxnRef,
-            'status' => 'pending_payment'
+            'status' => 'pending'
         ]);
 
         return $vnp_Url;
