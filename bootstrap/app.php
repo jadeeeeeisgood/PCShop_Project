@@ -15,7 +15,15 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             // EMERGENCY DISABLE - HTTPS causing infinite redirects
             // 'force.https' => \App\Http\Middleware\SafeForceHttps::class,
+            'force.https.assets' => \App\Http\Middleware\ForceHttpsAssets::class,
         ]);
+
+        // Apply HTTPS for assets only (không redirect)
+        if (app()->environment('production')) {
+            $middleware->web(prepend: [
+                \App\Http\Middleware\ForceHttpsAssets::class,
+            ]);
+        }
 
         // EMERGENCY DISABLE - HTTPS redirect causing Health:Severe
         // Apply Safe HTTPS redirect globally in production
