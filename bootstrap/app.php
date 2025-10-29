@@ -13,17 +13,18 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
-            // EMERGENCY DISABLE - HTTPS causing infinite redirects
+            // EMERGENCY DISABLE ALL HTTPS MIDDLEWARE - Causing Health:Severe
             // 'force.https' => \App\Http\Middleware\SafeForceHttps::class,
-            'force.https.assets' => \App\Http\Middleware\ForceHttpsAssets::class,
+            // 'force.https.assets' => \App\Http\Middleware\ForceHttpsAssets::class,
         ]);
 
+        // EMERGENCY DISABLE ALL HTTPS FORCING - Health:Severe
         // Apply HTTPS for assets only (không redirect)
-        if (app()->environment('production')) {
-            $middleware->web(prepend: [
-                \App\Http\Middleware\ForceHttpsAssets::class,
-            ]);
-        }
+        // if (app()->environment('production')) {
+        //     $middleware->web(prepend: [
+        //         \App\Http\Middleware\ForceHttpsAssets::class,
+        //     ]);
+        // }
 
         // EMERGENCY DISABLE - HTTPS redirect causing Health:Severe
         // Apply Safe HTTPS redirect globally in production
