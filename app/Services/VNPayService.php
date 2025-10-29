@@ -36,7 +36,7 @@ class VNPayService
         $vnp_TxnRef = $order->id . '_' . time();
         $vnp_OrderInfo = 'Thanh toán đơn hàng #' . $order->id . ' - PC Shop';
         $vnp_OrderType = 'billpayment';
-        $vnp_Amount = (int) $order->total; // VNPay yêu cầu integer
+        $vnp_Amount = (int) ($order->total * 100); // VNPay yêu cầu amount tính bằng xu (VND * 100)
         $vnp_Locale = 'vn';
         $vnp_BankCode = '';
         $vnp_IpAddr = $ipAddress;
@@ -51,9 +51,9 @@ class VNPayService
             throw new \Exception('VNPay configuration is incomplete');
         }
 
-        if ($vnp_Amount < 5000 || $vnp_Amount >= 1000000000) {
-            Log::error('VNPay amount out of range', ['amount' => $vnp_Amount]);
-            throw new \Exception('Payment amount must be between 5,000 and 999,999,999 VND');
+        if ($vnp_Amount < 5000 || $vnp_Amount >= 1000000000000) { // 50 VND - 100 triệu VND (tính bằng xu)
+            Log::error('VNPay amount out of range', ['amount' => $vnp_Amount, 'order_total' => $order->total]);
+            throw new \Exception('Payment amount must be between 50 and 100,000,000 VND');
         }
 
         $inputData = array(
@@ -118,6 +118,8 @@ class VNPayService
      */
     public function verifyCallback(array $data): array
     {
+        Log::info('VNPay callback received', ['data' => $data]);
+
         $vnp_SecureHash = $data['vnp_SecureHash'] ?? '';
         unset($data['vnp_SecureHash']);
         unset($data['vnp_SecureHashType']);
@@ -136,6 +138,14 @@ class VNPayService
 
         $secureHash = hash_hmac('sha512', $hashdata, $this->vnp_HashSecret);
 
+        Log::info('VNPay hash verification', [
+            'hashdata' => $hashdata,
+            'received_hash' => $vnp_SecureHash,
+            'calculated_hash' => $secureHash,
+            'hash_match' => $secureHash == $vnp_SecureHash,
+            'response_code' => $data['vnp_ResponseCode'] ?? 'unknown'
+        ]);
+
         $result = [
             'success' => false,
             'message' => '',
@@ -151,16 +161,24 @@ class VNPayService
                 $orderId = explode('_', $vnp_TxnRef)[0];
 
                 $order = Order::find($orderId);
+                Log::info('VNPay order verification', [
+                    'vnp_txn_ref' => $vnp_TxnRef,
+                    'extracted_order_id' => $orderId,
+                    'order_found' => $order ? true : false,
+                    'order_txn_ref' => $order ? $order->vnpay_txn_ref : null,
+                    'txn_ref_match' => $order ? ($order->vnpay_txn_ref == $vnp_TxnRef) : false
+                ]);
+
                 if ($order && $order->vnpay_txn_ref == $vnp_TxnRef) {
                     $result = [
                         'success' => true,
                         'message' => 'Thanh toán thành công',
                         'order_id' => $orderId,
-                        'amount' => $data['vnp_Amount'] / 100,
+                        'amount' => $data['vnp_Amount'] / 100, // Chuyển từ xu về VND
                         'transaction_id' => $data['vnp_TransactionNo'],
                     ];
                 } else {
-                    $result['message'] = 'Đơn hàng không tồn tại';
+                    $result['message'] = 'Đơn hàng không tồn tại hoặc không khớp';
                 }
             } else {
                 $result['message'] = $this->getResponseMessage($data['vnp_ResponseCode']);

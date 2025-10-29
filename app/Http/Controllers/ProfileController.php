@@ -35,7 +35,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('dashboard')->with('status', 'Thông tin cá nhân đã được cập nhật thành công!');
+        return Redirect::route('profile.edit')->with('status', 'Thông tin cá nhân đã được cập nhật thành công!');
     }
 
     /**
@@ -108,7 +108,7 @@ class ProfileController extends Controller
             return back()->with('error', 'Không thể hủy đơn hàng này.');
         }
 
-        $order->update(['status' => 'cancelled']);
+        $order->update(['status' => 'canceled']);
 
         return redirect()->route('profile.orders')->with('success', 'Đơn hàng đã được hủy thành công.');
     }

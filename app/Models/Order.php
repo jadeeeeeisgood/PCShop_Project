@@ -19,7 +19,8 @@ class Order extends Model
         'customer_address',
         'payment_method',
         'payment_status',
-        'notes'
+        'notes',
+        'vnpay_txn_ref'
     ];
 
     protected $casts = [

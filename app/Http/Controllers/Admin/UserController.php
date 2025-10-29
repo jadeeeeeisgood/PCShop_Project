@@ -202,4 +202,21 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')
             ->with('success', $message);
     }
+
+    /**
+     * Change user password
+     */
+    public function changePassword(Request $request, User $user)
+    {
+        $request->validate([
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user->update([
+            'password' => Hash::make($request->new_password),
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'Mật khẩu đã được thay đổi thành công.');
+    }
 }

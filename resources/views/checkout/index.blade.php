@@ -260,17 +260,20 @@
                             </div>
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-600">Phí vận chuyển:</span>
-                                <span class="font-medium">{{ number_format(30000, 0, ',', '.') }}đ</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-600">Thuế VAT (10%):</span>
-                                <span class="font-medium">{{ number_format($total * 0.1, 0, ',', '.') }}đ</span>
+                                <span class="font-medium">
+                                    @if($total >= 2000000)
+                                        Miễn phí
+                                    @else
+                                        {{ number_format(50000, 0, ',', '.') }}đ
+                                    @endif
+                                </span>
                             </div>
                             <div class="border-t border-gray-200 pt-3">
                                 <div class="flex justify-between items-center">
                                     <span class="text-base font-semibold text-gray-900">Tổng cộng:</span>
-                                    <span
-                                        class="text-xl font-bold text-blue-600">{{ number_format($total * 1.1 + 30000, 0, ',', '.') }}đ</span>
+                                    <span class="text-xl font-bold text-blue-600">
+                                        {{ number_format($total + ($total >= 2000000 ? 0 : 50000), 0, ',', '.') }}đ
+                                    </span>
                                 </div>
                             </div>
                         </div>

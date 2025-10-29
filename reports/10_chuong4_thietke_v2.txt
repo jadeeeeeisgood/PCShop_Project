@@ -1,0 +1,650 @@
+CHƯƠNG 4: THIẾT KẾ VÀ TRIỂN KHAI HỆ THỐNG
+
+4.1. Thiết kế kiến trúc hệ thống
+
+4.1.1. Mô hình kiến trúc MVC (Model-View-Controller)
+
+Laravel Framework áp dụng mô hình MVC để tách biệt các lớp logic trong ứng dụng:
+
+a) Model (Mô hình):
+• Eloquent ORM: Tương tác với cơ sở dữ liệu thông qua Active Record pattern
+• Relationships: Định nghĩa mối quan hệ giữa các thực thể (hasMany, belongsTo, belongsToMany)
+• Mutators & Accessors: Xử lý dữ liệu khi lưu và truy xuất
+• Scopes: Định nghĩa truy vấn có thể tái sử dụng
+• Validation: Xác thực dữ liệu cấp model
+
+Ví dụ triển khai Product Model:
+```php
+<?php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Product extends Model
+{
+    protected $fillable = [
+        'category_id', 'name', 'slug', 'description', 
+        'price', 'stock', 'image', 'images', 'specifications'
+    ];
+
+    protected $casts = [
+        'images' => 'array',
+        'specifications' => 'array',
+        'price' => 'decimal:2'
+    ];
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    public function scopeInStock($query)
+    {
+        return $query->where('stock', '>', 0);
+    }
+
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', true);
+    }
+}
+```
+
+b) View (Giao diện):
+• Blade Templates: Hệ thống template của Laravel với cú pháp đơn giản
+• Component System: Tái sử dụng giao diện thông qua Blade Components
+• Layout Inheritance: Kế thừa layout chung cho toàn bộ trang
+• View Composers: Chia sẻ dữ liệu cho nhiều view
+• Frontend Integration: Tích hợp Tailwind CSS và Alpine.js
+
+c) Controller (Điều khiển):
+• Resource Controllers: Xử lý CRUD operations theo RESTful convention
+• Form Request Validation: Xác thực dữ liệu đầu vào
+• Middleware Integration: Áp dụng middleware cho bảo mật và xác thực
+• Service Layer Pattern: Ủy thác logic phức tạp cho service classes
+• Response Handling: Trả về view, JSON hoặc redirect response
+
+4.1.2. Thiết kế microservice-oriented
+
+Mặc dù PC Shop được triển khai dưới dạng monolith, kiến trúc được thiết kế theo hướng modular để dễ dàng chuyển đổi sang microservices:
+
+a) Tách biệt theo domain:
+• User Management Service: Quản lý tài khoản người dùng
+• Product Catalog Service: Quản lý sản phẩm và danh mục
+• Order Management Service: Xử lý đơn hàng và giỏ hàng
+• Payment Processing Service: Xử lý thanh toán
+• Notification Service: Gửi email và thông báo
+
+b) Event-Driven Architecture:
+• Domain Events: Sự kiện nghiệp vụ để tách rời các service
+• Queue System: Xử lý bất đồng bộ với Laravel Queue
+• Observer Pattern: Theo dõi thay đổi model và kích hoạt sự kiện
+• Event Listeners: Xử lý sự kiện và cập nhật trạng thái
+
+4.1.3. Thiết kế API
+
+Hệ thống được thiết kế với RESTful API để hỗ trợ tương lai mở rộng:
+
+a) API Endpoints chính:
+
+```
+GET /api/products              - Danh sách sản phẩm
+GET /api/products/{id}         - Chi tiết sản phẩm
+GET /api/categories            - Danh sách danh mục
+GET /api/categories/{id}       - Chi tiết danh mục
+POST /api/orders               - Tạo đơn hàng mới
+GET /api/orders/{id}           - Chi tiết đơn hàng
+PUT /api/orders/{id}/status    - Cập nhật trạng thái đơn hàng
+POST /api/auth/login           - Đăng nhập
+POST /api/auth/register        - Đăng ký
+POST /api/auth/logout          - Đăng xuất
+```
+
+b) API Response Format:
+```json
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "name": "Product Name",
+        "price": 1500000
+    },
+    "message": "Thành công",
+    "meta": {
+        "current_page": 1,
+        "total_pages": 10,
+        "total_items": 100
+    }
+}
+```
+
+4.2. Thiết kế giao diện người dùng
+
+4.2.1. Thiết kế responsive với Mobile-First
+
+PC Shop áp dụng nguyên tắc Mobile-First trong thiết kế:
+
+a) Breakpoints Tailwind CSS:
+• sm: ≥ 640px (Tablet nhỏ)
+• md: ≥ 768px (Tablet)
+• lg: ≥ 1024px (Laptop)
+• xl: ≥ 1280px (Desktop)
+• 2xl: ≥ 1536px (Desktop lớn)
+
+b) Layout responsive:
+```html
+<!-- Grid layout sản phẩm -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    @foreach($products as $product)
+        <div class="bg-white rounded-lg shadow-md p-4">
+            <img src="{{ $product->image }}" 
+                 class="w-full h-48 object-cover rounded-md mb-4"
+                 alt="{{ $product->name }}">
+            <h3 class="text-lg font-semibold mb-2">{{ $product->name }}</h3>
+            <p class="text-red-600 font-bold">{{ number_format($product->price) }}đ</p>
+        </div>
+    @endforeach
+</div>
+```
+
+4.2.2. Component-based UI với Alpine.js
+
+Sử dụng Alpine.js để tạo các component tương tác:
+
+a) Shopping Cart Component:
+```html
+<div x-data="cart()" x-init="loadCart()">
+    <button @click="toggleCart()" 
+            class="relative p-2 text-gray-600 hover:text-gray-900">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor">
+            <!-- Cart icon -->
+        </svg>
+        <span x-show="itemCount > 0" 
+              x-text="itemCount"
+              class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+        </span>
+    </button>
+    
+    <div x-show="isOpen" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         class="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg">
+        <!-- Cart items -->
+    </div>
+</div>
+```
+
+b) Product Filter Component:
+```html
+<div x-data="productFilter()" class="mb-6">
+    <div class="flex flex-wrap gap-4 mb-4">
+        <select x-model="filters.category" @change="applyFilters()"
+                class="px-3 py-2 border border-gray-300 rounded-md">
+            <option value="">Tất cả danh mục</option>
+            @foreach($categories as $category)
+                <option value="{{ $category->id }}">{{ $category->name }}</option>
+            @endforeach
+        </select>
+        
+        <input x-model="filters.priceMin" @input="debounceFilter()"
+               type="number" placeholder="Giá từ"
+               class="px-3 py-2 border border-gray-300 rounded-md">
+        
+        <input x-model="filters.priceMax" @input="debounceFilter()"
+               type="number" placeholder="Giá đến"
+               class="px-3 py-2 border border-gray-300 rounded-md">
+    </div>
+</div>
+```
+
+4.2.3. Design System và UI Components
+
+a) Color Palette:
+```css
+:root {
+    --primary-50: #eff6ff;
+    --primary-500: #3b82f6;
+    --primary-600: #2563eb;
+    --primary-700: #1d4ed8;
+    --gray-50: #f9fafb;
+    --gray-500: #6b7280;
+    --gray-900: #111827;
+    --red-500: #ef4444;
+    --green-500: #10b981;
+}
+```
+
+b) Typography Scale:
+```css
+.text-xs { font-size: 0.75rem; }      /* 12px */
+.text-sm { font-size: 0.875rem; }     /* 14px */
+.text-base { font-size: 1rem; }       /* 16px */
+.text-lg { font-size: 1.125rem; }     /* 18px */
+.text-xl { font-size: 1.25rem; }      /* 20px */
+.text-2xl { font-size: 1.5rem; }      /* 24px */
+.text-3xl { font-size: 1.875rem; }    /* 30px */
+```
+
+c) Button Variants:
+```html
+<!-- Primary Button -->
+<button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
+    Thêm vào giỏ
+</button>
+
+<!-- Secondary Button -->
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md transition-colors">
+    Xem chi tiết
+</button>
+
+<!-- Danger Button -->
+<button class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
+    Xóa
+</button>
+```
+
+4.3. Triển khai chức năng cốt lõi
+
+4.3.1. Hệ thống xác thực và phân quyền
+
+a) Triển khai Authentication:
+```php
+<?php
+// app/Http/Controllers/Auth/LoginController.php
+class LoginController extends Controller
+{
+    public function login(LoginRequest $request)
+    {
+        $credentials = $request->validated();
+        
+        if (Auth::attempt($credentials, $request->remember)) {
+            $request->session()->regenerate();
+            
+            $user = Auth::user();
+            if ($user->role === 'admin') {
+                return redirect()->intended('/admin/dashboard');
+            }
+            
+            return redirect()->intended('/');
+        }
+        
+        return back()->withErrors([
+            'email' => 'Thông tin đăng nhập không chính xác.',
+        ])->onlyInput('email');
+    }
+}
+```
+
+b) Middleware phân quyền:
+```php
+<?php
+// app/Http/Middleware/RoleMiddleware.php
+class RoleMiddleware
+{
+    public function handle(Request $request, Closure $next, string $role)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        
+        if (Auth::user()->role !== $role) {
+            abort(403, 'Không có quyền truy cập.');
+        }
+        
+        return $next($request);
+    }
+}
+```
+
+4.3.2. Hệ thống quản lý sản phẩm
+
+a) Product Service:
+```php
+<?php
+namespace App\Services;
+
+class ProductService
+{
+    protected $productRepository;
+    
+    public function __construct(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+    
+    public function getFilteredProducts(array $filters, int $perPage = 12)
+    {
+        $query = $this->productRepository->query();
+        
+        if (!empty($filters['category'])) {
+            $query->where('category_id', $filters['category']);
+        }
+        
+        if (!empty($filters['min_price'])) {
+            $query->where('price', '>=', $filters['min_price']);
+        }
+        
+        if (!empty($filters['max_price'])) {
+            $query->where('price', '<=', $filters['max_price']);
+        }
+        
+        if (!empty($filters['search'])) {
+            $query->where(function($q) use ($filters) {
+                $q->where('name', 'like', '%' . $filters['search'] . '%')
+                  ->orWhere('description', 'like', '%' . $filters['search'] . '%');
+            });
+        }
+        
+        return $query->with('category')->paginate($perPage);
+    }
+    
+    public function updateStock(int $productId, int $quantity): bool
+    {
+        $product = $this->productRepository->find($productId);
+        
+        if (!$product || $product->stock < $quantity) {
+            return false;
+        }
+        
+        $product->decrement('stock', $quantity);
+        
+        // Phát sự kiện cập nhật stock
+        event(new StockUpdated($product));
+        
+        return true;
+    }
+}
+```
+
+4.3.3. Hệ thống giỏ hàng
+
+a) Cart Service:
+```php
+<?php
+namespace App\Services;
+
+class CartService
+{
+    public function addToCart(int $userId, int $productId, int $quantity): bool
+    {
+        $product = Product::find($productId);
+        
+        if (!$product || $product->stock < $quantity) {
+            return false;
+        }
+        
+        $cartItem = CartItem::where('user_id', $userId)
+                           ->where('product_id', $productId)
+                           ->first();
+        
+        if ($cartItem) {
+            $newQuantity = $cartItem->quantity + $quantity;
+            if ($newQuantity > $product->stock) {
+                return false;
+            }
+            $cartItem->update(['quantity' => $newQuantity]);
+        } else {
+            CartItem::create([
+                'user_id' => $userId,
+                'product_id' => $productId,
+                'quantity' => $quantity
+            ]);
+        }
+        
+        return true;
+    }
+    
+    public function getCartTotal(int $userId): float
+    {
+        return CartItem::where('user_id', $userId)
+                      ->with('product')
+                      ->get()
+                      ->sum(function($item) {
+                          return $item->quantity * $item->product->price;
+                      });
+    }
+    
+    public function clearCart(int $userId): void
+    {
+        CartItem::where('user_id', $userId)->delete();
+    }
+}
+```
+
+4.3.4. Hệ thống xử lý đơn hàng
+
+a) Order Processing:
+```php
+<?php
+namespace App\Services;
+
+use App\Models\Order;
+use App\Models\OrderItem;
+use Illuminate\Support\Facades\DB;
+
+class OrderService
+{
+    protected $cartService;
+    protected $stockService;
+    
+    public function createOrder(array $orderData, array $customerData): Order
+    {
+        return DB::transaction(function() use ($orderData, $customerData) {
+            // Tạo đơn hàng
+            $order = Order::create([
+                'user_id' => $orderData['user_id'] ?? null,
+                'customer_name' => $customerData['name'],
+                'customer_email' => $customerData['email'],
+                'customer_phone' => $customerData['phone'],
+                'customer_address' => $customerData['address'],
+                'payment_method' => $orderData['payment_method'],
+                'notes' => $orderData['notes'] ?? null,
+                'status' => 'pending',
+                'payment_status' => 'pending'
+            ]);
+            
+            $total = 0;
+            
+            // Tạo order items từ cart
+            foreach ($orderData['cart_items'] as $item) {
+                $product = Product::find($item['product_id']);
+                
+                if (!$product || $product->stock < $item['quantity']) {
+                    throw new \Exception('Sản phẩm không đủ số lượng');
+                }
+                
+                $subtotal = $product->price * $item['quantity'];
+                $total += $subtotal;
+                
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $product->id,
+                    'quantity' => $item['quantity'],
+                    'price' => $product->price
+                ]);
+                
+                // Cập nhật stock
+                $this->stockService->updateStock($product->id, $item['quantity']);
+            }
+            
+            // Cập nhật tổng tiền
+            $order->update([
+                'subtotal' => $total,
+                'total' => $total + $orderData['shipping_fee']
+            ]);
+            
+            // Xóa cart
+            if ($orderData['user_id']) {
+                $this->cartService->clearCart($orderData['user_id']);
+            }
+            
+            return $order;
+        });
+    }
+    
+    public function updateOrderStatus(int $orderId, string $status): bool
+    {
+        $order = Order::find($orderId);
+        
+        if (!$order) {
+            return false;
+        }
+        
+        $order->update(['status' => $status]);
+        
+        // Gửi email thông báo
+        if (in_array($status, ['shipped', 'delivered'])) {
+            // Dispatch job gửi email
+            dispatch(new SendOrderStatusUpdate($order));
+        }
+        
+        return true;
+    }
+}
+```
+
+4.4. Tích hợp thanh toán VNPay
+
+4.4.1. Cấu hình VNPay
+
+a) Environment Configuration:
+```php
+// config/services.php
+'vnpay' => [
+    'tmn_code' => env('VNPAY_TMN_CODE'),
+    'hash_secret' => env('VNPAY_HASH_SECRET'),
+    'url' => env('VNPAY_URL', 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html'),
+    'return_url' => env('VNPAY_RETURN_URL'),
+    'api_url' => env('VNPAY_API_URL'),
+];
+```
+
+b) VNPay Service Implementation:
+```php
+<?php
+namespace App\Services;
+
+class VNPayService
+{
+    protected $tmnCode;
+    protected $hashSecret;
+    protected $url;
+    protected $returnUrl;
+    
+    public function __construct()
+    {
+        $this->tmnCode = config('services.vnpay.tmn_code');
+        $this->hashSecret = config('services.vnpay.hash_secret');
+        $this->url = config('services.vnpay.url');
+        $this->returnUrl = config('services.vnpay.return_url');
+    }
+    
+    public function createPaymentUrl(Order $order): string
+    {
+        $vnpTxnRef = $order->id . '_' . time();
+        $vnpOrderInfo = 'Thanh toán đơn hàng ' . $order->id;
+        $vnpOrderType = 'billpayment';
+        $vnpAmount = $order->total * 100; // VNPay yêu cầu số tiền x100
+        $vnpLocale = 'vn';
+        $vnpBankCode = '';
+        $vnpIpAddr = request()->ip();
+        
+        $inputData = array(
+            "vnp_Version" => "2.1.0",
+            "vnp_TmnCode" => $this->tmnCode,
+            "vnp_Amount" => $vnpAmount,
+            "vnp_Command" => "pay",
+            "vnp_CreateDate" => date('YmdHis'),
+            "vnp_CurrCode" => "VND",
+            "vnp_IpAddr" => $vnpIpAddr,
+            "vnp_Locale" => $vnpLocale,
+            "vnp_OrderInfo" => $vnpOrderInfo,
+            "vnp_OrderType" => $vnpOrderType,
+            "vnp_ReturnUrl" => $this->returnUrl,
+            "vnp_TxnRef" => $vnpTxnRef,
+        );
+        
+        if (isset($vnpBankCode) && $vnpBankCode != "") {
+            $inputData['vnp_BankCode'] = $vnpBankCode;
+        }
+        
+        ksort($inputData);
+        $query = "";
+        $i = 0;
+        $hashdata = "";
+        foreach ($inputData as $key => $value) {
+            if ($i == 1) {
+                $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
+            } else {
+                $hashdata .= urlencode($key) . "=" . urlencode($value);
+                $i = 1;
+            }
+            $query .= urlencode($key) . "=" . urlencode($value) . '&';
+        }
+        
+        $vnpUrl = $this->url . "?" . $query;
+        if (isset($this->hashSecret)) {
+            $vnpSecureHash = hash_hmac('sha512', $hashdata, $this->hashSecret);
+            $vnpUrl .= 'vnp_SecureHash=' . $vnpSecureHash;
+        }
+        
+        // Lưu transaction reference
+        $order->update(['vnpay_txn_ref' => $vnpTxnRef]);
+        
+        return $vnpUrl;
+    }
+    
+    public function validateCallback(array $vnpayData): bool
+    {
+        $vnpSecureHash = $vnpayData['vnp_SecureHash'];
+        unset($vnpayData['vnp_SecureHash']);
+        
+        ksort($vnpayData);
+        $hashData = "";
+        $i = 0;
+        foreach ($vnpayData as $key => $value) {
+            if ($i == 1) {
+                $hashData = $hashData . '&' . urlencode($key) . "=" . urlencode($value);
+            } else {
+                $hashData = $hashData . urlencode($key) . "=" . urlencode($value);
+                $i = 1;
+            }
+        }
+        
+        $secureHash = hash_hmac('sha512', $hashData, $this->hashSecret);
+        
+        return $secureHash === $vnpSecureHash;
+    }
+}
+```
+
+═══════════════════════════════════════════════════════════════
+
+HÌNH 4.1: SƠ ĐỒ KIẾN TRÚC MVC CỦA HỆ THỐNG
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│      VIEW       │    │   CONTROLLER    │    │      MODEL      │
+│                 │    │                 │    │                 │
+│ - Blade Templates│◄──►│ - HTTP Requests │◄──►│ - Eloquent ORM  │
+│ - Components    │    │ - Validation    │    │ - Relationships │
+│ - Layouts       │    │ - Business Logic│    │ - Database      │
+│ - Frontend JS   │    │ - Responses     │    │ - Events        │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+HÌNH 4.2: LUỒNG XỬ LÝ THANH TOÁN VNPAY
+
+```
+Khách hàng → Chọn VNPay → Tạo URL thanh toán → Chuyển hướng VNPay
+    ↓                                                    ↓
+Xác nhận đơn hàng ← Cập nhật trạng thái ← Callback URL ← VNPay Gateway
+```

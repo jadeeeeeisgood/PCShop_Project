@@ -51,7 +51,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Số điện thoại</label>
-                <input id="phone" name="phone" type="tel" value="{{ old('phone', $user->phone) }}" autocomplete="tel"
+                <input id="phone" name="phone" type="tel" value="{{ old('phone', $user->phone ?? '') }}"
+                    autocomplete="tel"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     placeholder="Nhập số điện thoại">
                 @if ($errors->has('phone'))
@@ -61,7 +62,8 @@
 
             <div>
                 <label for="birth_date" class="block text-sm font-medium text-gray-700 mb-2">Ngày sinh</label>
-                <input id="birth_date" name="birth_date" type="date" value="{{ old('birth_date', $user->birth_date) }}"
+                <input id="birth_date" name="birth_date" type="date"
+                    value="{{ old('birth_date', $user->birth_date ?? '') }}"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                 @if ($errors->has('birth_date'))
                     <p class="text-red-600 text-sm mt-1">{{ $errors->first('birth_date') }}</p>
@@ -73,7 +75,7 @@
             <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Địa chỉ</label>
             <textarea id="address" name="address" rows="3"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                placeholder="Nhập địa chỉ đầy đủ">{{ old('address', $user->address) }}</textarea>
+                placeholder="Nhập địa chỉ đầy đủ">{{ old('address', $user->address ?? '') }}</textarea>
             @if ($errors->has('address'))
                 <p class="text-red-600 text-sm mt-1">{{ $errors->first('address') }}</p>
             @endif

@@ -30,7 +30,8 @@
                     </p>
 
                     <p class="text-gray-500 mb-8">
-                        Bạn sẽ nhận được email xác nhận tại <strong>{{ $order->customer_email }}</strong> với chi tiết đơn hàng.
+                        Bạn sẽ nhận được email xác nhận tại <strong>{{ $order->customer_email }}</strong> với chi tiết đơn
+                        hàng.
                     </p>
 
                     <!-- Order Details -->
@@ -43,8 +44,7 @@
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Tổng tiền:</span>
-                                <span
-                                    class="font-bold text-green-600">{{ number_format($order->total_amount, 0, ',', '.') }}
+                                <span class="font-bold text-green-600">{{ number_format($order->total, 0, ',', '.') }}
                                     VNĐ</span>
                             </div>
                             <div class="flex justify-between">
@@ -71,7 +71,7 @@
                                         Đã giao vận
                                     @elseif($order->status == 'delivered')
                                         Đã giao hàng
-                                    @elseif($order->status == 'cancelled')
+                                    @elseif($order->status == 'canceled')
                                         Đã hủy
                                     @else
                                         {{ ucfirst($order->status) }}

@@ -61,7 +61,7 @@ return [
             'processing' => 'Đang xử lý',
             'shipped' => 'Đã gửi hàng',
             'delivered' => 'Đã giao hàng',
-            'cancelled' => 'Đã hủy',
+            'canceled' => 'Đã hủy',
             'refunded' => 'Đã hoàn tiền',
         ],
         'payment_methods' => [

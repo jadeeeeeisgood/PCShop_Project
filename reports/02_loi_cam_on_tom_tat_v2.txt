@@ -1,0 +1,42 @@
+LỜI CẢM ƠN
+
+Tôi xin chân thành cảm ơn quý thầy cô trong Khoa Công nghệ Thông tin đã tận tình giảng dạy và truyền đạt kiến thức cho tôi trong suốt quá trình học tập tại trường.
+
+Đặc biệt, tôi xin gửi lời cảm ơn sâu sắc đến [Tên GVHD], người đã trực tiếp hướng dẫn, định hướng và hỗ trợ tôi trong suốt quá trình thực hiện đồ án tốt nghiệp này. Những lời góp ý, chỉ bảo quý báu của thầy/cô đã giúp tôi hoàn thành đồ án một cách tốt nhất.
+
+Tôi cũng xin cảm ơn gia đình, bạn bè đã luôn động viên, khuyến khích và tạo điều kiện thuận lợi để tôi có thể tập trung hoàn thành đồ án này.
+
+Mặc dù đã cố gắng hết sức nhưng báo cáo này không thể tránh khỏi những thiếu sót. Tôi mong nhận được sự góp ý từ quý thầy cô để đồ án được hoàn thiện hơn.
+
+Xin chân thành cảm ơn!
+
+Sinh viên thực hiện
+[Tên sinh viên]
+
+═══════════════════════════════════════════════════════════════
+
+TÓM TẮT ĐỒ ÁN
+
+Với sự phát triển mạnh mẽ của công nghệ thông tin và internet, thương mại điện tử đã trở thành xu hướng không thể thiếu trong hoạt động kinh doanh hiện đại. Đặc biệt trong lĩnh vực bán lẻ máy tính và thiết bị công nghệ, việc xây dựng một nền tảng thương mại điện tử chuyên nghiệp là điều cần thiết để đáp ứng nhu cầu mua sắm ngày càng cao của khách hàng.
+
+Đồ án "Hệ thống Thương mại Điện tử PC Shop" được phát triển nhằm xây dựng một website bán hàng trực tuyến hoàn chỉnh, chuyên bán các sản phẩm máy tính và phụ kiện công nghệ. Hệ thống được xây dựng trên nền tảng khung công tác Laravel - một khung làm việc PHP hiện đại, kết hợp với cơ sở dữ liệu MySQL và các công nghệ web tiên tiến khác.
+
+Các tính năng chính của hệ thống bao gồm:
+- Quản lý danh mục sản phẩm và thông tin chi tiết
+- Hệ thống giỏ hàng thông minh với hỗ trợ phiên làm việc
+- Tích hợp đa phương thức thanh toán (VNPay, thanh toán khi nhận hàng)
+- Hệ thống quản trị với bảng điều khiển thống kê
+- Quản lý đơn hàng và theo dõi trạng thái thời gian thực
+- Hệ thống xác thực và phân quyền người dùng
+- Giao diện phản hồi tối ưu cho mọi thiết bị
+
+Kết quả đạt được:
+- Xây dựng thành công hệ thống thương mại điện tử hoàn chỉnh với 27 sản phẩm mẫu
+- Tích hợp thành công cổng thanh toán VNPay với môi trường thử nghiệm
+- Triển khai thành công trên AWS Elastic Beanstalk
+- Đạt hiệu suất cao với thời gian tải trang dưới 2 giây
+- Bảo mật tốt với bảo vệ CSRF, ngăn chặn SQL injection
+
+Đồ án đã đạt được mục tiêu đề ra, tạo ra một sản phẩm thực tế có thể ứng dụng trong kinh doanh. Hệ thống có khả năng mở rộng cao và dễ dàng bảo trì, phù hợp với xu hướng phát triển công nghệ hiện tại.
+
+Từ khóa: Thương mại điện tử, Laravel, VNPay, Bán hàng trực tuyến, PHP, MySQL, AWS

@@ -239,20 +239,20 @@
                                                             'processing' => 'bg-blue-100 text-blue-800',
                                                             'shipped' => 'bg-purple-100 text-purple-800',
                                                             'delivered' => 'bg-green-100 text-green-800',
-                                                            'cancelled' => 'bg-red-100 text-red-800'
+                                                            'canceled' => 'bg-red-100 text-red-800'
                                                         ];
                                                         $statusLabels = [
                                                             'pending' => 'Chờ xử lý',
                                                             'processing' => 'Đang xử lý',
                                                             'shipped' => 'Đã gửi hàng',
                                                             'delivered' => 'Đã giao hàng',
-                                                            'cancelled' => 'Đã hủy'
+                                                            'canceled' => 'Đã hủy'
                                                         ];
                                                     @endphp
                                                     <span class="inline-flex px-3 py-1 text-xs font-semibold rounded-full {{ $statusClasses[$order->status] ?? 'bg-gray-100 text-gray-800' }}">
                                                         {{ $statusLabels[$order->status] ?? ucfirst($order->status) }}
                                                     </span>
-                                                    <span class="font-bold text-blue-600">{{ number_format($order->total_amount, 0, ',', '.') }}đ</span>
+                                                    <span class="font-bold text-blue-600">{{ number_format((float)$order->total, 0, ',', '.') }}đ</span>
                                                 </div>
                                             </div>
                                             

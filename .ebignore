@@ -1,0 +1,32 @@
+# Ignore local development files
+.env.local
+.env.development
+storage/logs/*
+!storage/logs/.gitkeep
+storage/framework/cache/*
+!storage/framework/cache/.gitkeep
+storage/framework/sessions/*
+!storage/framework/sessions/.gitkeep
+storage/framework/views/*
+!storage/framework/views/.gitkeep
+storage/app/public/*
+!storage/app/public/.gitkeep
+
+# Ignore node_modules and build artifacts
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore temporary files
+*.tmp
+*.temp

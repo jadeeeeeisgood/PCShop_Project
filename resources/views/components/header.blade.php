@@ -128,7 +128,8 @@
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Hồ sơ của tôi
                             </a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="{{ route('profile.orders') }}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Đơn hàng của tôi
                             </a>
                             @if(auth()->user()->role === 'admin')

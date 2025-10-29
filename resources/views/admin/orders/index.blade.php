@@ -37,6 +37,9 @@
                         <button onclick="bulkAction('canceled')" class="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
                             Hủy đơn hàng
                         </button>
+                        <button onclick="bulkDelete()" class="w-full text-left px-4 py-2 text-sm text-red-700 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-900 font-medium">
+                            ⚠️ Xóa đơn hàng (Demo)
+                        </button>
                     </div>
                 </div>
             </div>
@@ -111,7 +114,7 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Hoàn thành</p>
-                    <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $orders->where('status', 'completed')->count() }}</p>
+                    <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $orders->where('status', 'delivered')->count() }}</p>
                 </div>
             </div>
         </div>
@@ -135,8 +138,8 @@
                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Chờ xử lý</option>
                     <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>Đang xử lý</option>
                     <option value="shipped" {{ request('status') == 'shipped' ? 'selected' : '' }}>Đã gửi</option>
-                    <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Hoàn thành</option>
-                    <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
+                    <option value="delivered" {{ request('status') == 'delivered' ? 'selected' : '' }}>Hoàn thành</option>
+                    <option value="canceled" {{ request('status') == 'canceled' ? 'selected' : '' }}>Đã hủy</option>
                 </select>
             </div>
             
@@ -200,6 +203,7 @@
                         <th class="w-48 px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Khách hàng</th>
                         <th class="w-20 px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">SL</th>
                         <th class="w-24 px-3 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tổng tiền</th>
+                        <th class="w-32 px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Thanh toán</th>
                         <th class="w-32 px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Trạng thái</th>
                         <th class="w-24 px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Ngày đặt</th>
                         <th class="w-20 px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Thao tác</th>
@@ -258,43 +262,41 @@
                                         </span>
                                 @endswitch
                             </td>
-                            <td class="px-3 py-3">
-                                <div class="flex flex-col items-center space-y-1">
-                                    @switch($order->status)
-                                        @case('pending')
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
-                                                Chờ xử lý
-                                            </span>
-                                            @break
-                                        @case('processing')
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
-                                                Đang xử lý
-                                            </span>
-                                            @break
-                                        @case('shipped')
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
-                                                Đã gửi
-                                            </span>
-                                            @break
-                                        @case('delivered')
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                                </svg>
-                                                Hoàn thành
-                                            </span>
-                                            @break
-                                        @case('canceled')
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300">
-                                                Đã hủy
-                                            </span>
-                                            @break
-                                        @default
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300">
-                                                {{ $order->status }}
-                                            </span>
-                                    @endswitch
-                                </div>
+                            <td class="px-3 py-3 text-center">
+                                @switch($order->status)
+                                    @case('pending')
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
+                                            Chờ xử lý
+                                        </span>
+                                        @break
+                                    @case('processing')
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                                            Đang xử lý
+                                        </span>
+                                        @break
+                                    @case('shipped')
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                                            Đã gửi
+                                        </span>
+                                        @break
+                                    @case('delivered')
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            Hoàn thành
+                                        </span>
+                                        @break
+                                    @case('canceled')
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300">
+                                            Đã hủy
+                                        </span>
+                                        @break
+                                    @default
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300">
+                                            {{ $order->status }}
+                                        </span>
+                                @endswitch
                             </td>
                             <td class="px-3 py-3 text-center">
                                 <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $order->created_at->format('d/m/Y') }}</div>
@@ -339,12 +341,20 @@
                                             Hủy
                                         </button>
                                     @endif
+                                    @if(in_array($order->status, ['pending', 'canceled']))
+                                        <button onclick="deleteOrder({{ $order->id }})" class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-700 hover:text-red-900 hover:bg-red-100 rounded transition-colors">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                            Xóa
+                                        </button>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-6 py-12 text-center">
+                            <td colspan="9" class="px-6 py-12 text-center">
                                 <div class="text-gray-500 dark:text-gray-400">
                                     <svg class="w-16 h-16 mx-auto mb-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -503,6 +513,75 @@
             const params = new URLSearchParams(window.location.search);
             params.set('export', '1');
             window.location.href = '{{ route("admin.orders.index") }}?' + params.toString();
+        }
+
+        // Delete single order
+        function deleteOrder(orderId) {
+            if (confirm('⚠️ CẢNH BÁO: Bạn có chắc chắn muốn XÓA VĨNH VIỄN đơn hàng này?\n\nHành động này KHÔNG THỂ HOÀN TÁC!\n\nTrong thực tế, việc xóa đơn hàng không được khuyến khích vì lý do pháp lý và kinh doanh.')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/admin/orders/${orderId}`;
+                form.style.display = 'none';
+                
+                // Add CSRF token
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = '{{ csrf_token() }}';
+                form.appendChild(csrfInput);
+                
+                // Add method
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'DELETE';
+                form.appendChild(methodInput);
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // Bulk delete orders
+        function bulkDelete() {
+            const selectedIds = Array.from(document.querySelectorAll('.order-checkbox:checked')).map(cb => cb.value);
+            
+            if (selectedIds.length === 0) {
+                alert('Vui lòng chọn ít nhất một đơn hàng');
+                return;
+            }
+
+            if (confirm(`⚠️ CẢNH BÁO: Bạn có chắc chắn muốn XÓA VĨNH VIỄN ${selectedIds.length} đơn hàng đã chọn?\n\nHành động này KHÔNG THỂ HOÀN TÁC!\n\nChỉ các đơn hàng ở trạng thái "Chờ xử lý" hoặc "Đã hủy" mới có thể xóa.\n\nTrong thực tế, việc xóa đơn hàng không được khuyến khích vì lý do pháp lý và kinh doanh.`)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route("admin.orders.bulk-delete") }}';
+                
+                // Add CSRF token
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = '{{ csrf_token() }}';
+                form.appendChild(csrfInput);
+                
+                // Add method
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'DELETE';
+                form.appendChild(methodInput);
+                
+                // Add selected IDs
+                selectedIds.forEach(id => {
+                    const idInput = document.createElement('input');
+                    idInput.type = 'hidden';
+                    idInput.name = 'order_ids[]';
+                    idInput.value = id;
+                    form.appendChild(idInput);
+                });
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
         }
 
         // Auto submit on filter change

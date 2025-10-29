@@ -109,22 +109,36 @@ class CheckoutController extends Controller
 
         // Handle payment processing
         if ($request->payment_method === 'vnpay') {
+            \Log::info('Redirecting to VNPay for order: ' . $order->id);
             return redirect()->route('payment.vnpay', ['order' => $order->id]);
         } elseif ($request->payment_method !== 'cod') {
             // Handle other payment methods if needed
+            \Log::info('Redirecting to success for non-COD payment, order: ' . $order->id);
             return redirect()->route('checkout.success', ['order' => $order->id])
                 ->with('info', 'Đơn hàng đã được tạo. Vui lòng hoàn tất thanh toán.');
         }
 
+        \Log::info('Redirecting to success for COD payment, order: ' . $order->id);
         return redirect()->route('checkout.success', ['order' => $order->id])
             ->with('success', 'Đơn hàng đã được đặt thành công!');
     }
 
-    public function success(Order $order = null)
+    public function success($order = null)
     {
+        // If order ID is provided in URL, find the order
+        if ($order) {
+            $order = Order::find($order);
+        }
+
+        // If no order found and we have order_id in session, try that
         if (!$order && session()->has('order_id')) {
             $order = Order::find(session('order_id'));
             session()->forget('order_id');
+        }
+
+        // If still no order, redirect to cart
+        if (!$order) {
+            return redirect()->route('cart.index')->with('error', 'Không tìm thấy thông tin đơn hàng.');
         }
 
         return view('checkout.success', compact('order'));

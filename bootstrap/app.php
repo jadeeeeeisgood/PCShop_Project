@@ -13,7 +13,15 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'force.https' => \App\Http\Middleware\SafeForceHttps::class,
         ]);
+
+        // Apply Safe HTTPS redirect globally in production
+        if (app()->environment('production')) {
+            $middleware->web(prepend: [
+                \App\Http\Middleware\SafeForceHttps::class,
+            ]);
+        }
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -54,13 +54,11 @@ class Product extends Model
     protected function formattedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => number_format($this->price, 0, ',', '.') . ' VNĐ',
+            get: fn($value) => number_format((float) $this->price, 0, ',', '.') . ' VNĐ',
         );
-    }
-
-    /**
-     * Get the product's image URL.
-     */
+    }    /**
+         * Get the product's image URL.
+         */
     protected function imageUrl(): Attribute
     {
         return Attribute::make(

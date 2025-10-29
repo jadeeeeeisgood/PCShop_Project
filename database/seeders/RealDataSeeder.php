@@ -4,6 +4,13 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\User;
+use App\Models\CartItem;
+use App\Models\OrderItem;
+use App\Models\Order;
 
 class RealDataSeeder extends Seeder
 {
@@ -12,9 +19,27 @@ class RealDataSeeder extends Seeder
      */
     public function run(): void
     {
-        // Clear existing data first
-        \App\Models\Product::truncate();
-        \App\Models\Category::truncate();
+        $this->command->info('Starting real data seeding...');
+
+        // Disable foreign key checks temporarily
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        // Clear existing data first - clear dependent tables first
+        $this->command->info('Clearing existing data...');
+        CartItem::truncate();
+        OrderItem::truncate();
+        Order::truncate();
+        Product::truncate();
+        Category::truncate();
+
+        // Reset auto increment counters
+        DB::statement('ALTER TABLE categories AUTO_INCREMENT = 1;');
+        DB::statement('ALTER TABLE products AUTO_INCREMENT = 1;');
+
+        // Re-enable foreign key checks
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $this->command->info('Seeding categories...');
 
         // Real Categories Data
         $categories = [
@@ -50,17 +75,21 @@ class RealDataSeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            \App\Models\Category::create($category);
+            Category::create($category);
         }
 
+        $this->command->info('Categories seeded successfully!');
+
         // Get category IDs for products
-        $gaming_pc = \App\Models\Category::where('slug', 'gaming-pc')->first();
-        $office_pc = \App\Models\Category::where('slug', 'office-pc')->first();
-        $laptop = \App\Models\Category::where('slug', 'laptop')->first();
-        $ps5 = \App\Models\Category::where('slug', 'ps5')->first();
-        $macbook = \App\Models\Category::where('slug', 'macbook')->first();
-        $linh_kien = \App\Models\Category::where('slug', 'linh-kien')->first();
-        $gaming_gear = \App\Models\Category::where('slug', 'gaming-gear')->first();
+        $gaming_pc = Category::where('slug', 'gaming-pc')->first();
+        $office_pc = Category::where('slug', 'office-pc')->first();
+        $laptop = Category::where('slug', 'laptop')->first();
+        $ps5 = Category::where('slug', 'ps5')->first();
+        $macbook = Category::where('slug', 'macbook')->first();
+        $linh_kien = Category::where('slug', 'linh-kien')->first();
+        $gaming_gear = Category::where('slug', 'gaming-gear')->first();
+
+        $this->command->info('Seeding products...');
 
         // Real Products Data
         $products = [
@@ -353,8 +382,12 @@ CASE MIK FOCALORS M BLACK (Đen)',
         foreach ($products as $product) {
             // Ensure all products are active
             $product['is_active'] = true;
-            \App\Models\Product::create($product);
+            Product::create($product);
         }
+
+        $this->command->info('Products seeded successfully!');
+
+        $this->command->info('Seeding sample customers...');
 
         // Create some sample customers
         $customers = [
@@ -379,9 +412,10 @@ CASE MIK FOCALORS M BLACK (Đen)',
         ];
 
         foreach ($customers as $customer) {
-            \App\Models\User::create($customer);
+            User::create($customer);
         }
 
-        $this->command->info('Real data seeded successfully!');
+        $this->command->info('Sample customers seeded successfully!');
+        $this->command->info('Real data seeding completed successfully!');
     }
 }

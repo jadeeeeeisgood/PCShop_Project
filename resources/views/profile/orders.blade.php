@@ -115,14 +115,14 @@
                                                                     'processing' => 'bg-blue-100 text-blue-800', 
                                                                     'shipped' => 'bg-purple-100 text-purple-800',
                                                                     'delivered' => 'bg-green-100 text-green-800',
-                                                                    'cancelled' => 'bg-red-100 text-red-800'
+                                                                    'canceled' => 'bg-red-100 text-red-800'
                                                                 ];
                                                                 $statusLabels = [
                                                                     'pending' => 'Chờ xử lý',
                                                                     'processing' => 'Đang xử lý',
                                                                     'shipped' => 'Đã gửi hàng',
                                                                     'delivered' => 'Đã giao hàng',
-                                                                    'cancelled' => 'Đã hủy'
+                                                                    'canceled' => 'Đã hủy'
                                                                 ];
                                                             @endphp
                                                             <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $statusClasses[$order->status] ?? 'bg-gray-100 text-gray-800' }}">
@@ -133,7 +133,7 @@
                                                     <div class="flex items-center gap-3">
                                                         <div class="text-right">
                                                             <p class="text-xs text-gray-500 uppercase tracking-wide font-bold">Tổng cộng</p>
-                                                            <p class="text-lg font-bold text-blue-600">{{ number_format($order->total_amount, 0, ',', '.') }}đ</p>
+                                                            <p class="text-lg font-bold text-blue-600">{{ number_format($order->total, 0, ',', '.') }}đ</p>
                                                         </div>
                                                         <div class="flex gap-2">
                                                             <a href="{{ route('profile.order', $order->id) }}" 
@@ -141,7 +141,8 @@
                                                                 Chi tiết
                                                             </a>
                                                             @if($order->status === 'pending')
-                                                                <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors">
+                                                                <button onclick="showCancelModalForOrder({{ $order->id }})" 
+                                                                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors">
                                                                     Hủy
                                                                 </button>
                                                             @endif
@@ -212,4 +213,93 @@
             </div>
         </div>
     </section>
+
+    <!-- Cancel Order Modal -->
+    <div id="cancelOrderModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center" style="z-index: 9999;">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.982 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Hủy đơn hàng</h3>
+                        <p class="text-sm text-gray-600">Đơn hàng #<span id="orderIdToCancel"></span></p>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-6">Bạn có chắc chắn muốn hủy đơn hàng này? Hành động này không thể hoàn tác.</p>
+                <div class="flex gap-3">
+                    <button type="button" 
+                            onclick="hideCancelOrderModal()"
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors">
+                        Đóng
+                    </button>
+                    <form id="cancelOrderForm" method="POST" action="" class="flex-1">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" 
+                                class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl transition-colors">
+                            Xác nhận hủy
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+    /* Modal specific styles to prevent conflicts */
+    #cancelOrderModal.flex {
+        display: flex !important;
+    }
+    #cancelOrderModal.hidden {
+        display: none !important;
+    }
+    .overflow-hidden {
+        overflow: hidden !important;
+    }
+    </style>
+
+    <script>
+    function showCancelModalForOrder(orderId) {
+        console.log('showCancelModalForOrder called with orderId:', orderId); // Debug log
+        document.getElementById('orderIdToCancel').textContent = orderId;
+        document.getElementById('cancelOrderForm').action = '/profile/orders/' + orderId + '/cancel';
+        
+        const modal = document.getElementById('cancelOrderModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.classList.add('overflow-hidden');
+        console.log('Modal should be visible now'); // Debug log
+    }
+
+    function hideCancelOrderModal() {
+        console.log('hideCancelOrderModal called'); // Debug log
+        const modal = document.getElementById('cancelOrderModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    // Close modal when clicking outside
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('cancelOrderModal');
+        if (modal) {
+            modal.addEventListener('click', function(event) {
+                if (event.target === this) {
+                    hideCancelOrderModal();
+                }
+            });
+        }
+    });
+
+    // Close modal when pressing Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            hideCancelOrderModal();
+        }
+    });
+    </script>
 @endsection

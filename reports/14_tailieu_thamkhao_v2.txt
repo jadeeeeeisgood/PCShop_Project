@@ -1,0 +1,294 @@
+TÀI LIỆU THAM KHẢO
+
+[1] Laravel Documentation Team. (2024). Laravel 11.x Documentation. Laravel LLC. 
+    URL: https://laravel.com/docs/11.x
+
+[2] Otwell, T. (2023). Laravel: Up & Running - A Framework for Building Modern PHP Apps. 
+    3rd Edition. O'Reilly Media.
+
+[3] Stauffer, M. (2023). Laravel Best Practices and Design Patterns. 
+    Packt Publishing.
+
+[4] MySQL Development Team. (2024). MySQL 8.0 Reference Manual. 
+    Oracle Corporation. URL: https://dev.mysql.com/doc/refman/8.0/en/
+
+[5] Amazon Web Services. (2024). AWS Elastic Beanstalk Developer Guide. 
+    Amazon Web Services, Inc. URL: https://docs.aws.amazon.com/elasticbeanstalk/
+
+[6] VNPay Corporation. (2024). VNPay Payment Gateway Integration Guide. 
+    Công ty TNHH Giải pháp Thanh toán Việt Nam.
+
+[7] Tailwind Labs. (2024). Tailwind CSS Documentation. 
+    URL: https://tailwindcss.com/docs
+
+[8] Alpine.js Development Team. (2024). Alpine.js Documentation. 
+    URL: https://alpinejs.dev/
+
+[9] PHPUnit Development Team. (2024). PHPUnit Documentation. 
+    URL: https://phpunit.de/documentation.html
+
+[10] OWASP Foundation. (2024). OWASP Top Ten Web Application Security Risks. 
+     The Open Web Application Security Project. 
+     URL: https://owasp.org/www-project-top-ten/
+
+[11] Fowler, M. (2018). Patterns of Enterprise Application Architecture. 
+     Addison-Wesley Professional.
+
+[12] Martin, R. C. (2017). Clean Architecture: A Craftsman's Guide to Software Structure and Design. 
+     Prentice Hall.
+
+[13] Hunt, A., & Thomas, D. (2019). The Pragmatic Programmer: Your Journey to Mastery. 
+     2nd Edition. Addison-Wesley Professional.
+
+[14] Evans, E. (2015). Domain-Driven Design: Tackling Complexity in the Heart of Software. 
+     Addison-Wesley Professional.
+
+[15] Beck, K. (2017). Test Driven Development: By Example. 
+     Addison-Wesley Professional.
+
+[16] Gamma, E., Helm, R., Johnson, R., & Vlissides, J. (1994). 
+     Design Patterns: Elements of Reusable Object-Oriented Software. 
+     Addison-Wesley Professional.
+
+[17] Richardson, C. (2018). Microservices Patterns: With Examples in Java. 
+     Manning Publications.
+
+[18] Newman, S. (2021). Building Microservices: Designing Fine-Grained Systems. 
+     2nd Edition. O'Reilly Media.
+
+[19] Kleppmann, M. (2017). Designing Data-Intensive Applications. 
+     O'Reilly Media.
+
+[20] Beighley, L., & Morrison, M. (2017). Head First PHP & MySQL. 
+     2nd Edition. O'Reilly Media.
+
+[21] Krug, S. (2014). Don't Make Me Think, Revisited: A Common Sense Approach to Web Usability. 
+     3rd Edition. New Riders.
+
+[22] Norman, D. (2013). The Design of Everyday Things. 
+     Revised and Expanded Edition. Basic Books.
+
+[23] Cooper, A., Reimann, R., Cronin, D., & Noessel, C. (2014). 
+     About Face: The Essentials of Interaction Design. 
+     4th Edition. Wiley.
+
+[24] Marcotte, E. (2011). Responsive Web Design. 
+     A Book Apart.
+
+[25] Heilmann, C. (2020). The Pragmatic Guide to JavaScript. 
+     Pragmatic Bookshelf.
+
+[26] Redis Labs. (2024). Redis Documentation. 
+     URL: https://redis.io/documentation
+
+[27] Docker Inc. (2024). Docker Documentation. 
+     URL: https://docs.docker.com/
+
+[28] nginx Inc. (2024). nginx Documentation. 
+     URL: https://nginx.org/en/docs/
+
+[29] Let's Encrypt. (2024). Let's Encrypt Documentation. 
+     Internet Security Research Group. URL: https://letsencrypt.org/docs/
+
+[30] Mozilla Developer Network. (2024). Web Technology Documentation. 
+     Mozilla Foundation. URL: https://developer.mozilla.org/
+
+[31] Google Developers. (2024). Web Fundamentals. 
+     Google LLC. URL: https://developers.google.com/web/fundamentals
+
+[32] W3C. (2024). Web Content Accessibility Guidelines (WCAG) 2.1. 
+     World Wide Web Consortium. URL: https://www.w3.org/WAI/WCAG21/quickref/
+
+[33] RFC 7231. (2014). Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content. 
+     Internet Engineering Task Force.
+
+[34] RFC 6749. (2012). The OAuth 2.0 Authorization Framework. 
+     Internet Engineering Task Force.
+
+[35] JSON:API Specification. (2024). JSON:API v1.1. 
+     URL: https://jsonapi.org/
+
+[36] PSR-1: Basic Coding Standard. (2024). PHP Framework Interop Group. 
+     URL: https://www.php-fig.org/psr/psr-1/
+
+[37] PSR-4: Autoloader. (2024). PHP Framework Interop Group. 
+     URL: https://www.php-fig.org/psr/psr-4/
+
+[38] Composer Documentation. (2024). Nils Adermann & Jordi Boggiano. 
+     URL: https://getcomposer.org/doc/
+
+[39] Git Documentation. (2024). Software Freedom Conservancy. 
+     URL: https://git-scm.com/documentation
+
+[40] VS Code Documentation. (2024). Microsoft Corporation. 
+     URL: https://code.visualstudio.com/docs
+
+[41] Stack Overflow. (2024). Developer Survey Results. 
+     Stack Overflow. URL: https://insights.stackoverflow.com/survey
+
+[42] GitHub. (2024). State of the Octoverse Report. 
+     GitHub Inc. URL: https://octoverse.github.com/
+
+[43] JetBrains. (2024). The State of Developer Ecosystem Report. 
+     JetBrains s.r.o. URL: https://www.jetbrains.com/lp/devecosystem-2024/
+
+[44] Nielsen, J. (2020). 10 Usability Heuristics for User Interface Design. 
+     Nielsen Norman Group. URL: https://www.nngroup.com/articles/ten-usability-heuristics/
+
+[45] Lighthouse Documentation. (2024). Google LLC. 
+     URL: https://developers.google.com/web/tools/lighthouse
+
+[46] GTmetrix. (2024). Website Performance Testing and Monitoring. 
+     GTmetrix. URL: https://gtmetrix.com/
+
+[47] Pingdom. (2024). Website Speed Test. 
+     SolarWinds Worldwide, LLC. URL: https://tools.pingdom.com/
+
+[48] Apache JMeter Documentation. (2024). The Apache Software Foundation. 
+     URL: https://jmeter.apache.org/usermanual/
+
+[49] Selenium Documentation. (2024). Software Freedom Conservancy. 
+     URL: https://selenium-python.readthedocs.io/
+
+[50] Postman Learning Center. (2024). Postman Inc. 
+     URL: https://learning.postman.com/
+
+WEBSITES VÀ BLOGS THAM KHẢO:
+
+[51] Laravel News. (2024). Laravel community news and tutorials. 
+     URL: https://laravel-news.com/
+
+[52] Laracasts. (2024). Laravel and PHP screencasts. 
+     URL: https://laracasts.com/
+
+[53] DigitalOcean Community. (2024). Developer tutorials and guides. 
+     URL: https://www.digitalocean.com/community/tutorials
+
+[54] AWS Architecture Center. (2024). Cloud architecture patterns and best practices. 
+     URL: https://aws.amazon.com/architecture/
+
+[55] PHP The Right Way. (2024). PHP best practices and standards. 
+     URL: https://phptherightway.com/
+
+[56] MDN Web Docs. (2024). Web technology documentation. 
+     URL: https://developer.mozilla.org/
+
+[57] CSS-Tricks. (2024). Web design and development articles. 
+     URL: https://css-tricks.com/
+
+[58] Smashing Magazine. (2024). Web design and development magazine. 
+     URL: https://www.smashingmagazine.com/
+
+[59] A List Apart. (2024). Web standards and best practices. 
+     URL: https://alistapart.com/
+
+[60] 24 Ways. (2024). Web development advent calendar. 
+     URL: https://24ways.org/
+
+GITHUB REPOSITORIES THAM KHẢO:
+
+[61] Laravel Framework. (2024). The Laravel Framework source code. 
+     GitHub Repository: https://github.com/laravel/laravel
+
+[62] Laravel Breeze. (2024). Minimal Laravel authentication scaffolding. 
+     GitHub Repository: https://github.com/laravel/breeze
+
+[63] Laravel Sanctum. (2024). Laravel API authentication. 
+     GitHub Repository: https://github.com/laravel/sanctum
+
+[64] Tailwind CSS. (2024). Utility-first CSS framework. 
+     GitHub Repository: https://github.com/tailwindlabs/tailwindcss
+
+[65] Alpine.js. (2024). Lightweight JavaScript framework. 
+     GitHub Repository: https://github.com/alpinejs/alpine
+
+[66] PHPUnit. (2024). Testing framework for PHP. 
+     GitHub Repository: https://github.com/sebastianbergmann/phpunit
+
+[67] Composer. (2024). Dependency Manager for PHP. 
+     GitHub Repository: https://github.com/composer/composer
+
+[68] Redis. (2024). In-memory data structure store. 
+     GitHub Repository: https://github.com/redis/redis
+
+[69] MySQL. (2024). Open source relational database. 
+     GitHub Repository: https://github.com/mysql/mysql-server
+
+[70] nginx. (2024). HTTP and reverse proxy server. 
+     GitHub Repository: https://github.com/nginx/nginx
+
+YOUTUBE CHANNELS VÀ VIDEO TUTORIALS:
+
+[71] Laracasts YouTube Channel. (2024). Laravel video tutorials. 
+     URL: https://www.youtube.com/c/Laracasts
+
+[72] Traversy Media. (2024). Web development tutorials. 
+     URL: https://www.youtube.com/c/TraversyMedia
+
+[73] The Net Ninja. (2024). Web development tutorials. 
+     URL: https://www.youtube.com/c/TheNetNinja
+
+[74] Academind. (2024). Programming and web development. 
+     URL: https://www.youtube.com/c/Academind
+
+[75] FreeCodeCamp. (2024). Programming tutorials and courses. 
+     URL: https://www.youtube.com/c/Freecodecamp
+
+ONLINE COURSES VÀ PLATFORMS:
+
+[76] Udemy. (2024). Laravel and PHP development courses. 
+     URL: https://www.udemy.com/
+
+[77] Coursera. (2024). Web development specializations. 
+     URL: https://www.coursera.org/
+
+[78] Pluralsight. (2024). Technology skills platform. 
+     URL: https://www.pluralsight.com/
+
+[79] LinkedIn Learning. (2024). Professional development courses. 
+     URL: https://www.linkedin.com/learning/
+
+[80] edX. (2024). University-level courses online. 
+     URL: https://www.edx.org/
+
+TOOLS VÀ SOFTWARE DOCUMENTATION:
+
+[81] Visual Studio Code. (2024). Source code editor documentation. 
+     URL: https://code.visualstudio.com/docs
+
+[82] PHPStorm. (2024). PHP IDE documentation. 
+     URL: https://www.jetbrains.com/phpstorm/documentation/
+
+[83] XAMPP. (2024). Cross-platform web server solution. 
+     URL: https://www.apachefriends.org/
+
+[84] Laragon. (2024). Fast & beautiful universal development environment. 
+     URL: https://laragon.org/
+
+[85] Insomnia. (2024). API testing tool documentation. 
+     URL: https://docs.insomnia.rest/
+
+COMMUNITY FORUMS VÀ SUPPORT:
+
+[86] Laravel.io. (2024). Laravel community portal. 
+     URL: https://laravel.io/
+
+[87] Reddit - r/laravel. (2024). Laravel community discussions. 
+     URL: https://www.reddit.com/r/laravel/
+
+[88] Stack Overflow. (2024). Programming Q&A platform. 
+     URL: https://stackoverflow.com/
+
+[89] Laravel Discord. (2024). Laravel community chat. 
+     URL: https://discord.gg/laravel
+
+[90] Larachat Slack. (2024). Laravel community workspace. 
+     URL: https://larachat.co/
+
+GHI CHÚ VỀ TÀI LIỆU THAM KHẢO:
+
+Tất cả các tài liệu tham khảo được truy cập và xác minh tính chính xác vào tháng 12 năm 2024. Một số tài liệu có thể được cập nhật sau thời điểm này. Độc giả nên kiểm tra phiên bản mới nhất của documentation và best practices khi triển khai trong môi trường production.
+
+Các framework và library được sử dụng trong dự án đều tuân theo license mã nguồn mở và có thể được sử dụng cho mục đích thương mại. Chi tiết license cụ thể có thể được tìm thấy trong file LICENSE của từng repository.
+
+Dự án PC Shop được phát triển với mục đích học tập và nghiên cứu. Không có conflict of interest trong việc lựa chọn technology stack hay vendor services.

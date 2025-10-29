@@ -36,10 +36,10 @@ return [
     ],
 
     'vnpay' => [
-        'tmn_code' => env('VNPAY_TMN_CODE', 'SANDBOX'),
-        'hash_secret' => env('VNPAY_HASH_SECRET', 'SANDBOX_SECRET'),
+        'tmn_code' => env('VNPAY_TMN_CODE', 'V22NS9SB'),
+        'hash_secret' => env('VNPAY_HASH_SECRET', 'Z4WJQGCQF2FNJL8A4V23K4TQF3FQ5FG4'),
         'url' => env('VNPAY_URL', 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html'),
-        'return_url' => env('VNPAY_RETURN_URL', 'http://127.0.0.1:8000/checkout/vnpay/callback'),
+        'return_url' => env('VNPAY_RETURN_URL', env('APP_URL', 'http://localhost') . '/payment/vnpay/callback'),
     ],
 
     'pusher' => [
