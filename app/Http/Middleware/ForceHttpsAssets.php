@@ -27,7 +27,7 @@ class ForceHttpsAssets
         // Force HTTPS for asset URLs only (không redirect requests)
         if ($request->isSecure() || $request->header('HTTP_X_FORWARDED_PROTO') === 'https') {
             URL::forceScheme('https');
-            URL::forceRootUrl('https://www.pcshopvn.id.vn');
+            URL::forceRootUrl('http://pcshop-final.eba-gm3xqw32.us-east-1.elasticbeanstalk.com');
         }
 
         return $next($request);
