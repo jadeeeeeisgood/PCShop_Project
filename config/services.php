@@ -39,7 +39,11 @@ return [
         'tmn_code' => env('VNPAY_TMN_CODE', 'V22NS9SB'),
         'hash_secret' => env('VNPAY_HASH_SECRET', 'Z4WJQGCQF2FNJL8A4V23K4TQF3FQ5FG4'),
         'url' => env('VNPAY_URL', 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html'),
-        'return_url' => env('VNPAY_RETURN_URL', env('APP_URL', 'http://localhost') . '/payment/vnpay/callback'),
+        'return_url' => env('VNPAY_RETURN_URL') ?: (
+            env('APP_ENV') === 'local'
+            ? 'http://127.0.0.1:8000/payment/vnpay/callback'
+            : env('APP_URL', 'http://localhost') . '/payment/vnpay/callback'
+        ),
     ],
 
     'pusher' => [

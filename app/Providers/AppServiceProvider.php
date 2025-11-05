@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Request;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,16 +21,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // EMERGENCY DISABLE - HTTPS forcing causing Health:Severe
-        // Force HTTPS URLs in production (Safe version for AWS ELB)
-        // if (app()->environment('production')) {
-        //     // Only force scheme if not behind proxy
-        //     $request = request();
-        //     if ($request && !$request->header('HTTP_X_FORWARDED_PROTO')) {
-        //         URL::forceScheme('https');
-        //     }
-        //     URL::forceRootUrl(config('app.url'));
-        // }
+        // Force HTTPS for assets only in production (AWS ELB safe)
+        if ($this->app->environment('production')) {
+            // Force all generated URLs to use HTTPS
+            URL::forceScheme('https');
+
+            // Configure clean URL generation
+            URL::forceRootUrl('https://www.pcshopvn.id.vn');
+        }
 
         // Set timezone
         date_default_timezone_set('Asia/Ho_Chi_Minh');

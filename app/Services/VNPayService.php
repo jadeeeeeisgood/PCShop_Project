@@ -17,7 +17,39 @@ class VNPayService
         $this->vnp_TmnCode = config('services.vnpay.tmn_code');
         $this->vnp_HashSecret = config('services.vnpay.hash_secret');
         $this->vnp_Url = config('services.vnpay.url');
-        $this->vnp_ReturnUrl = config('services.vnpay.return_url');
+
+        // Tự động xác định return URL dựa trên môi trường
+        $this->vnp_ReturnUrl = $this->determineReturnUrl();
+
+        Log::info('VNPayService initialized', [
+            'environment' => app()->environment(),
+            'app_url' => config('app.url'),
+            'return_url' => $this->vnp_ReturnUrl,
+            'tmn_code' => $this->vnp_TmnCode
+        ]);
+    }
+
+    /**
+     * Xác định return URL dựa trên môi trường hiện tại
+     */
+    private function determineReturnUrl(): string
+    {
+        // Nếu có VNPAY_RETURN_URL trong .env thì dùng nó
+        if ($returnUrl = config('services.vnpay.return_url')) {
+            return $returnUrl;
+        }
+
+        // Tự động phát hiện môi trường
+        if (app()->environment('local')) {
+            // Localhost development
+            return 'http://127.0.0.1:8000/payment/vnpay/callback';
+        } elseif (app()->environment('production')) {
+            // Production environment - use HTTPS
+            return config('app.url') . '/payment/vnpay/callback';
+        } else {
+            // Fallback to route helper
+            return route('payment.vnpay.callback');
+        }
     }
 
     /**

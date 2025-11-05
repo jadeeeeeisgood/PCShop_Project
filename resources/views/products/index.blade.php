@@ -188,7 +188,7 @@
                                 <img src="{{ $product->image_url }}" 
                                      alt="{{ $product->name }}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                     onerror="this.src='{{ asset('img/placeholder.jpg') }}'; this.onerror=null;">
+                                     onerror="this.src='{{ asset('img/placeholder.svg') }}'; this.onerror=null;">
                             @else
                                 <div class="w-full h-full flex items-center justify-center text-gray-400">
                                     <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">

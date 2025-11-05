@@ -114,12 +114,12 @@ class CheckoutController extends Controller
         } elseif ($request->payment_method !== 'cod') {
             // Handle other payment methods if needed
             \Log::info('Redirecting to success for non-COD payment, order: ' . $order->id);
-            return redirect()->route('checkout.success', ['order' => $order->id])
+            return redirect(force_http_route('checkout.success', ['order' => $order->id]))
                 ->with('info', 'Đơn hàng đã được tạo. Vui lòng hoàn tất thanh toán.');
         }
 
         \Log::info('Redirecting to success for COD payment, order: ' . $order->id);
-        return redirect()->route('checkout.success', ['order' => $order->id])
+        return redirect(force_http_route('checkout.success', ['order' => $order->id]))
             ->with('success', 'Đơn hàng đã được đặt thành công!');
     }
 

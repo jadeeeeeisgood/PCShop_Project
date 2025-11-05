@@ -12,6 +12,12 @@ storage/framework/views/*
 storage/app/public/*
 !storage/app/public/.gitkeep
 
+# Ignore large image directories
+# public/img/ - commented out to allow placeholder images
+public/storage/
+storage/backups/
+database/database.sqlite
+
 # Ignore node_modules and build artifacts
 node_modules/
 npm-debug.log
@@ -30,3 +36,9 @@ Thumbs.db
 # Ignore temporary files
 *.tmp
 *.temp
+*.zip
+*.tar.gz
+
+# Ignore test files
+tests/
+phpunit.xml

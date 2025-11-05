@@ -13,26 +13,21 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
-            // EMERGENCY DISABLE ALL HTTPS MIDDLEWARE - Causing Health:Severe
-            // 'force.https' => \App\Http\Middleware\SafeForceHttps::class,
-            // 'force.https.assets' => \App\Http\Middleware\ForceHttpsAssets::class,
+            // DISABLED - All HTTPS/HTTP middleware causing issues  
+            // 'force.http.domain' => \App\Http\Middleware\ForceHttpForDomain::class,
         ]);
 
-        // EMERGENCY DISABLE ALL HTTPS FORCING - Health:Severe
-        // Apply HTTPS for assets only (không redirect)
+        // DISABLED - All domain-specific middleware
         // if (app()->environment('production')) {
         //     $middleware->web(prepend: [
-        //         \App\Http\Middleware\ForceHttpsAssets::class,
+        //         \App\Http\Middleware\ForceHttpForDomain::class,
         //     ]);
         // }
-
-        // EMERGENCY DISABLE - HTTPS redirect causing Health:Severe
-        // Apply Safe HTTPS redirect globally in production
-        // if (app()->environment('production')) {
-        //     $middleware->web(prepend: [
-        //         \App\Http\Middleware\SafeForceHttps::class,
-        //     ]);
-        // }
+    
+        // DISABLED - All HTTPS middleware causing issues
+        // 'force.https' => \App\Http\Middleware\SafeForceHttps::class,
+        // 'force.https.assets' => \App\Http\Middleware\ForceHttpsAssets::class,
+        // 'force.https.assets.only' => \App\Http\Middleware\ForceHttpsAssetsOnly::class,
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

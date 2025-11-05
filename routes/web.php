@@ -9,6 +9,37 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+// DEBUGGING ROUTES - test routing works
+Route::get('/test-route', function () {
+    return 'Route working! Laravel routing is functional.';
+});
+
+Route::get('/test', function () {
+    return 'SIMPLE TEST WORKS!';
+});
+
+Route::get('/test-info', function () {
+    return [
+        'message' => 'Laravel routing working!',
+        'php_version' => PHP_VERSION,
+        'laravel_version' => app()->version(),
+        'environment' => app()->environment(),
+        'url' => request()->url(),
+        'path' => request()->path(),
+        'method' => request()->method(),
+    ];
+});
+
+Route::get('/debug-info', function () {
+    return [
+        'url' => request()->url(),
+        'path' => request()->path(),
+        'method' => request()->method(),
+        'headers' => request()->headers->all(),
+        'server' => request()->server->all(),
+    ];
+});
+
 // Test route to verify callback works without auth
 Route::match(['GET', 'POST'], '/callback-test', function (Illuminate\Http\Request $request) {
     \Log::info('Callback test route accessed');
@@ -129,11 +160,12 @@ Route::get('/products', [ProductController::class, 'frontendIndex'])->name('prod
 Route::get('/products/{product}', [ProductController::class, 'frontendShow'])->name('products.show');
 Route::get('/categories/{category}', [ProductController::class, 'frontendByCategory'])->name('products.category');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+// Checkout routes - accessible without auth for guest checkout
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
-    // VNPay payment routes
+Route::middleware('auth')->group(function () {
+    // VNPay payment routes - still need auth for payment processing
     Route::get('/payment/vnpay/{order}', [\App\Http\Controllers\VNPayController::class, 'createPayment'])->name('payment.vnpay');
 });
 
@@ -192,6 +224,42 @@ Route::get('/test/vnpay/{order}', function (\App\Models\Order $order) {
         return;
     }
 })->name('test.vnpay');
+
+// Debug VNPay Payment Issues
+Route::get('/debug/vnpay/{order}', function (\App\Models\Order $order) {
+    echo "<h1>VNPay Debug for Order #{$order->id}</h1>";
+    echo "<strong>Order Details:</strong><br>";
+    echo "Status: " . $order->status . "<br>";
+    echo "Payment Status: " . $order->payment_status . "<br>";
+    echo "Total: " . number_format((float)$order->total) . " VND<br>";
+    echo "User ID: " . $order->user_id . "<br>";
+    echo "Current Auth ID: " . (auth()->id() ?? 'Not authenticated') . "<br>";
+    echo "<br>";
+    
+    echo "<strong>VNPay Config:</strong><br>";
+    $config = config('services.vnpay');
+    echo "TMN Code: " . $config['tmn_code'] . "<br>";
+    echo "Hash Secret: " . (strlen($config['hash_secret']) > 0 ? 'Set (' . strlen($config['hash_secret']) . ' chars)' : 'Not set') . "<br>";
+    echo "URL: " . $config['url'] . "<br>";
+    echo "Return URL: " . $config['return_url'] . "<br>";
+    echo "<br>";
+    
+    echo "<strong>Environment:</strong><br>";
+    echo "APP_ENV: " . config('app.env') . "<br>";
+    echo "APP_URL: " . config('app.url') . "<br>";
+    echo "APP_DEBUG: " . (config('app.debug') ? 'true' : 'false') . "<br>";
+    echo "<br>";
+    
+    if ($order->status !== 'pending') {
+        echo "<div style='color: red; font-weight: bold;'>⚠️ Order status is not 'pending' - cannot process payment</div>";
+    }
+    
+    if (auth()->check() && $order->user_id !== auth()->id()) {
+        echo "<div style='color: red; font-weight: bold;'>⚠️ Order does not belong to current user</div>";
+    }
+    
+    echo "<br><a href='/payment/vnpay/{$order->id}' style='background: blue; color: white; padding: 10px; text-decoration: none; border-radius: 5px;'>Try VNPay Payment</a>";
+})->name('debug.vnpay');
 
 Route::get('/order-tracking', [CheckoutController::class, 'orderTracking'])->name('order.tracking');
 

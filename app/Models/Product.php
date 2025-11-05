@@ -62,7 +62,7 @@ class Product extends Model
     protected function imageUrl(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $this->image ? asset('img/' . basename($this->image)) : asset('img/placeholder.jpg'),
+            get: fn($value) => $this->image ? asset('img/' . basename($this->image)) : asset('img/placeholder.svg'),
         );
     }
 

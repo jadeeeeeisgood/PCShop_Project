@@ -33,10 +33,39 @@ class VNPayController extends Controller
                 'order_id' => $order->id,
                 'order_user_id' => $order->user_id,
                 'current_user_id' => auth()->id(),
-                'is_authenticated' => auth()->check()
+                'is_authenticated' => auth()->check(),
+                'order_status' => $order->status,
+                'payment_status' => $order->payment_status,
+                'order_total' => $order->total
             ]);
 
-            // Validate order belongs to current user
+            // Debug: Check all config values
+            $vnpayConfig = config('services.vnpay');
+            Log::info('VNPay config check', [
+                'tmn_code' => $vnpayConfig['tmn_code'] ?? 'missing',
+                'has_hash_secret' => !empty($vnpayConfig['hash_secret']),
+                'hash_secret_length' => strlen($vnpayConfig['hash_secret'] ?? ''),
+                'url' => $vnpayConfig['url'] ?? 'missing',
+                'return_url' => $vnpayConfig['return_url'] ?? 'missing'
+            ]);
+
+            // Validate VNPay configuration first
+            if (empty($vnpayConfig['tmn_code']) || empty($vnpayConfig['hash_secret']) || empty($vnpayConfig['url'])) {
+                Log::error('VNPay configuration incomplete', $vnpayConfig);
+                return redirect()->route('checkout.index')
+                    ->with('error', 'Cấu hình thanh toán không đầy đủ. Vui lòng liên hệ admin.');
+            }
+
+            // Check if order exists and has valid total
+            if (!$order || $order->total <= 0) {
+                Log::error('VNPay: Invalid order', [
+                    'order_exists' => $order ? true : false,
+                    'order_total' => $order ? $order->total : 'N/A'
+                ]);
+                return redirect()->route('cart.index')->with('error', 'Đơn hàng không hợp lệ.');
+            }
+
+            // Validate order belongs to current user (only if authenticated)
             if (auth()->check() && $order->user_id !== auth()->id()) {
                 Log::warning('VNPay: Order does not belong to current user', [
                     'order_id' => $order->id,
@@ -47,9 +76,13 @@ class VNPayController extends Controller
             }
 
             // Check if order is already paid
-            if ($order->status === 'paid' || $order->status === 'processing') {
-                Log::info('VNPay: Order already paid', ['order_id' => $order->id, 'status' => $order->status]);
-                return redirect()->route('checkout.success', $order->id);
+            if ($order->status === 'paid' || $order->status === 'processing' || $order->payment_status === 'completed') {
+                Log::info('VNPay: Order already paid', [
+                    'order_id' => $order->id, 
+                    'status' => $order->status,
+                    'payment_status' => $order->payment_status
+                ]);
+                return redirect(force_http_route('checkout.success', $order->id));
             }
 
             // Check if order is canceled
@@ -73,6 +106,11 @@ class VNPayController extends Controller
                 );
 
                 if (!$reserved) {
+                    Log::warning('VNPay: Stock reservation failed', [
+                        'product_id' => $item->product_id,
+                        'requested_quantity' => $item->quantity,
+                        'session_id' => session()->getId()
+                    ]);
                     return redirect()->route('cart.index')
                         ->with('error', 'Sản phẩm "' . $item->product->name . '" không đủ số lượng trong kho.');
                 }
@@ -81,18 +119,25 @@ class VNPayController extends Controller
             // Create VNPay payment URL
             $paymentUrl = $this->vnPayService->createPaymentUrl($order, $request->ip());
 
-            Log::info('VNPay redirect URL created', [
+            Log::info('VNPay redirect URL created successfully', [
                 'order_id' => $order->id,
-                'payment_url' => $paymentUrl,
-                'return_url' => config('services.vnpay.return_url')
+                'payment_url_length' => strlen($paymentUrl),
+                'return_url' => $vnpayConfig['return_url']
             ]);
 
             return redirect($paymentUrl);
 
         } catch (\Exception $e) {
-            Log::error('VNPay create payment error: ' . $e->getMessage());
+            Log::error('VNPay create payment error', [
+                'error_message' => $e->getMessage(),
+                'error_file' => $e->getFile(),
+                'error_line' => $e->getLine(),
+                'order_id' => $order->id ?? 'unknown',
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return redirect()->route('checkout.index')
-                ->with('error', 'Có lỗi xảy ra khi tạo thanh toán. Vui lòng thử lại.');
+                ->with('error', 'Có lỗi xảy ra khi tạo thanh toán: ' . $e->getMessage());
         }
     }
 
@@ -177,7 +222,7 @@ class VNPayController extends Controller
                         }
                     }
 
-                    return redirect()->route('checkout.success', $order->id)
+                    return redirect(force_http_route('checkout.success', $order->id))
                         ->with('success', 'Thanh toán thành công!');
                 });
 
